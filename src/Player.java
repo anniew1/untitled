@@ -74,6 +74,10 @@ public class Player {
         score++;
     }
 
+    public void collectBomb() {
+        score -= 10;
+    }
+
     public BufferedImage getPlayerImage() {
         if (facingRight) {
             return right;

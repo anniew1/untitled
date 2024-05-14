@@ -14,6 +14,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener 
     private Enemy enemy;
     private boolean[] pressedKeys;
     private ArrayList<Coin> coins;
+    private ArrayList<Bomb> bombs;
 
     public GraphicsPanel() {
         try {
@@ -25,6 +26,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener 
         player2 = new Player("src/luigileft.png", "src/luigiright.png");
         enemy = new Enemy();
         coins = new ArrayList<>();
+        bombs = new ArrayList<Bomb>();
         pressedKeys = new boolean[128]; // 128 keys on keyboard, max keycode is 127
         addKeyListener(this);
         addMouseListener(this);
@@ -55,6 +57,21 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener 
             if (player2.playerRect().intersects(coin.coinRect())) { // check for collision
                 player2.collectCoin();
                 coins.remove(i);
+                i--;
+            }
+        }
+
+        for (int i = 0; i < bombs.size(); i++) {
+            Bomb bomb = bombs.get(i);
+            g.drawImage(bomb.getImage(), bomb.getxCoord(), bomb.getyCoord(), null); // draw Coin
+            if (player.playerRect().intersects(bomb.bombRect())) { // check for collision
+                player.collectBomb();
+                bombs.remove(i);
+                i--;
+            }
+            if (player2.playerRect().intersects(bomb.bombRect())) { // check for collision
+                player2.collectBomb();
+                bombs.remove(i);
                 i--;
             }
         }
@@ -146,7 +163,15 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener 
         }
     }
 
-    public void mouseEntered(MouseEvent e) { } // unimplemented
+    public void mouseEntered(MouseEvent e) {
+        for (int i = 0; i < 10; i++) {
+            bombs.add(new Bomb((int)(Math.random() * 800) + 20, (int)(Math.random() * 450) + 20));
+        }
+    }
 
-    public void mouseExited(MouseEvent e) { } // unimplemented
+    public void mouseExited(MouseEvent e) {
+        for (int i = 0; i < 10; i++) {
+            coins.add(new Coin((int)(Math.random() * 800) + 20, (int)(Math.random() * 450) + 20));
+        }
+    }
 }
